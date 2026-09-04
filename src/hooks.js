@@ -189,3 +189,24 @@ export function useSheen() {
 
   return { onPointerMove }
 }
+
+/**
+ * Tracks a CSS media query in React. Used so the long bullet lists collapse on
+ * phones and stay fully open on desktop, and so the toggle button is not even
+ * rendered where it has no job.
+ */
+export function useMediaQuery(query) {
+  const [matches, setMatches] = useState(
+    () => typeof window !== 'undefined' && window.matchMedia(query).matches
+  )
+
+  useEffect(() => {
+    const mq = window.matchMedia(query)
+    const onChange = (e) => setMatches(e.matches)
+    setMatches(mq.matches)
+    mq.addEventListener('change', onChange)
+    return () => mq.removeEventListener('change', onChange)
+  }, [query])
+
+  return matches
+}

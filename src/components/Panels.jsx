@@ -7,8 +7,64 @@ import {
   projects,
   skillGroups,
 } from '../data/profile.js'
-import { useSheen } from '../hooks.js'
+import { useId, useState } from 'react'
+import { useMediaQuery, useSheen } from '../hooks.js'
 import { ArrowIcon, Chips } from './Chrome.jsx'
+
+/**
+ * A bullet list that stays whole on desktop and collapses to a short preview on
+ * phones, where these lists run six or seven items deep and bury the panels
+ * below them.
+ *
+ * Every item stays in the DOM and the extras carry `hidden`, so `aria-controls`
+ * points at stable content and the toggle reports real expanded state.
+ */
+function Bullets({ items, className, preview = 2 }) {
+  const compact = useMediaQuery('(max-width: 640px)')
+  const [open, setOpen] = useState(false)
+  const id = useId()
+
+  if (!items?.length) return null
+
+  const hiddenCount = items.length - preview
+  // Worth a toggle only if it hides at least two items.
+  const collapsible = compact && hiddenCount >= 2
+
+  return (
+    <>
+      <ul className={className} id={id}>
+        {items.map((text, i) => (
+          <li key={i} hidden={collapsible && !open && i >= preview}>
+            {text}
+          </li>
+        ))}
+      </ul>
+
+      {collapsible && (
+        <button
+          type="button"
+          className="more"
+          aria-expanded={open}
+          aria-controls={id}
+          onClick={() => setOpen((v) => !v)}
+        >
+          {open ? 'Show less' : `Show ${hiddenCount} more`}
+          <span className="more__chev" aria-hidden="true">
+            <svg width="9" height="6" viewBox="0 0 9 6" fill="none">
+              <path
+                d="M1 1l3.5 3.5L8 1"
+                stroke="currentColor"
+                strokeWidth="1.4"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </span>
+        </button>
+      )}
+    </>
+  )
+}
 
 /* ------------------------------------------------------------------ Now --- */
 export function Now() {
@@ -70,21 +126,12 @@ export function About() {
 function Panel({ project, index, wide }) {
   const sheen = useSheen()
 
-  // A project with several live deployments lists them individually. The panel
-  // itself must then stay an <article>, since anchors cannot nest.
-  const hasLinks = project.links?.length > 0
-  const Tag = project.href && !hasLinks ? 'a' : 'article'
-  const linkProps =
-    project.href && !hasLinks
-      ? { href: project.href, target: '_blank', rel: 'noreferrer noopener' }
-      : {}
-
+  // The panel is always an <article>. It used to become an <a> when it had a
+  // single href, but that cannot contain the "Show more" button, and wrapping
+  // a whole panel of prose in one link reads badly in a screen reader. The
+  // link now lives in the footer where it can be seen and described.
   return (
-    <Tag
-      className={`panel${wide ? ' panel--wide' : ''}`}
-      {...linkProps}
-      {...sheen}
-    >
+    <article className={`panel${wide ? ' panel--wide' : ''}`} {...sheen}>
       <div className="panel__top">
         <span className="panel__no">{String(index + 1).padStart(2, '0')}</span>
         <span className="panel__no">{project.year}</span>
@@ -94,36 +141,26 @@ function Panel({ project, index, wide }) {
       <p className="panel__kind">{project.kind}</p>
       <p className="panel__desc">{project.description}</p>
 
-      {project.highlights?.length > 0 && (
-        <ul className="panel__points">
-          {project.highlights.map((h, i) => (
-            <li key={i}>{h}</li>
-          ))}
-        </ul>
-      )}
+      <Bullets items={project.highlights} className="panel__points" />
 
       <div className="panel__foot">
         <Chips items={project.tech} />
 
-        {hasLinks && (
+        {(project.links?.length > 0 || project.href) && (
           <ul className="panel__links">
-            {project.links.map((l) => (
-              <li key={l.href}>
-                <a href={l.href} target="_blank" rel="noreferrer noopener">
-                  {l.label} <ArrowIcon />
-                </a>
-              </li>
-            ))}
+            {(project.links ?? [{ label: 'View project', href: project.href }]).map(
+              (l) => (
+                <li key={l.href}>
+                  <a href={l.href} target="_blank" rel="noreferrer noopener">
+                    {l.label} <ArrowIcon />
+                  </a>
+                </li>
+              )
+            )}
           </ul>
         )}
-
-        {project.href && !hasLinks && (
-          <span className="panel__go">
-            View project <ArrowIcon />
-          </span>
-        )}
       </div>
-    </Tag>
+    </article>
   )
 }
 
@@ -184,13 +221,7 @@ export function Experience() {
             {job.contract && <p className="xp__contract">{job.contract}</p>}
             {job.summary && <p className="xp__summary">{job.summary}</p>}
 
-            {job.highlights?.length > 0 && (
-              <ul className="xp__points">
-                {job.highlights.map((h, i) => (
-                  <li key={i}>{h}</li>
-                ))}
-              </ul>
-            )}
+            <Bullets items={job.highlights} className="xp__points" />
 
             <Chips items={job.tech} />
           </div>

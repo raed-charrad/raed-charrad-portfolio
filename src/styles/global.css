@@ -806,23 +806,6 @@ ul {
   display: grid;
   gap: 0.75rem;
 }
-.panel__go {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  font-family: var(--mono);
-  font-size: 0.6875rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--flow);
-  justify-self: start;
-}
-.panel__go svg {
-  transition: transform 0.25s var(--spring);
-}
-.panel:hover .panel__go svg {
-  transform: translate(3px, -3px);
-}
 
 @media (max-width: 800px) {
   .work {
@@ -1298,4 +1281,50 @@ ul {
   .panel__links a:hover {
     transform: none;
   }
+}
+
+/* --- "Show more" toggle (mobile only; React omits it elsewhere) ---------- */
+/* The UA sheet hides [hidden], but grid/flex parents set display on their
+   children, so state it explicitly for the collapsed bullets. */
+.panel__points li[hidden],
+.xp__points li[hidden] {
+  display: none;
+}
+
+.more {
+  justify-self: start;
+  align-self: start;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--flow);
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0.5rem 0.85rem;
+  margin-bottom: 0.35rem;
+  cursor: pointer;
+  transition: border-color 0.2s var(--ease), background 0.2s var(--ease);
+}
+.more:hover,
+.more:focus-visible {
+  border-color: var(--flow);
+  background: var(--flow-soft);
+}
+.more__chev {
+  display: inline-flex;
+  transition: transform 0.25s var(--ease);
+}
+.more[aria-expanded='true'] .more__chev {
+  transform: rotate(180deg);
+}
+
+/* The panel is a flex column whose footer is pushed down by margin-top:auto;
+   the toggle must not be stretched across the full width by align-items. */
+.panel > .more {
+  flex: none;
 }
