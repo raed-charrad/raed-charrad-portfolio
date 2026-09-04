@@ -1156,3 +1156,146 @@ ul {
 .panel__links a:hover svg {
   transform: translate(2px, -2px);
 }
+
+/* ==========================================================================
+   SMALL SCREENS
+   --------------------------------------------------------------------------
+   The left rail and the inline bar links both disappear under 900px / 760px,
+   so the section strip below becomes the only navigation on a phone. Nothing
+   here changes the desktop layout.
+   ========================================================================== */
+
+/* --- Section strip: hidden by default, it is the mobile nav only --------- */
+.bar__strip {
+  display: none;
+  border-top: 1px solid var(--line);
+}
+.bar__track {
+  display: flex;
+  gap: 0.45rem;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding: 0.55rem var(--gutter);
+}
+.bar__track::-webkit-scrollbar {
+  display: none;
+}
+.bar__chip {
+  flex: none;
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.06em;
+  color: var(--dim);
+  border: 1px solid var(--line);
+  background: var(--panel);
+  border-radius: 999px;
+  padding: 0.35rem 0.7rem;
+  white-space: nowrap;
+  transition: color 0.2s var(--ease), border-color 0.2s var(--ease),
+    background 0.2s var(--ease);
+}
+.bar__chip[aria-current='true'] {
+  color: var(--ink);
+  border-color: var(--flow);
+  background: var(--flow-soft);
+}
+
+@media (max-width: 900px) {
+  .bar__strip {
+    display: block;
+  }
+  /* The bar is two rows tall here, so anchor targets need more clearance. */
+  html {
+    scroll-padding-top: 7.5rem;
+  }
+}
+
+/* --- 640px and below ---------------------------------------------------- */
+@media (max-width: 640px) {
+  /* Tighter vertical rhythm: desktop breathing room wastes a phone screen. */
+  .section {
+    padding-block: 2.5rem;
+  }
+  .hero {
+    padding-block: 2.25rem 2rem;
+  }
+  .contact {
+    padding-block: 3rem;
+  }
+  .section__head {
+    margin-bottom: 1.5rem;
+  }
+
+  /* Long strings must never widen the page. */
+  .contact__cell a,
+  .contact__value,
+  .contact__mail {
+    overflow-wrap: anywhere;
+  }
+}
+
+/* --- 560px and below ---------------------------------------------------- */
+@media (max-width: 560px) {
+  /* "Raed Charrad / Software Engineer & Co-founder" crowds out the button. */
+  .bar__mark i {
+    display: none;
+  }
+
+  /* Half-width panels are already single-column here, so the numbering row
+     and the tighter padding are what is left to reclaim. */
+  .panel,
+  .xp__item {
+    padding: 1.15rem;
+  }
+}
+
+/* Seven stage captions at 10px is a wall of text on a phone. Show only the
+   one the diagram is currently highlighting — but only where it animates,
+   so reduced-motion users still get the full list. */
+@media (max-width: 560px) and (prefers-reduced-motion: no-preference) {
+  .pipe__legend li {
+    display: none;
+  }
+  .pipe__legend li[data-on='true'] {
+    display: block;
+  }
+}
+
+/* --- 420px and below ---------------------------------------------------- */
+@media (max-width: 420px) {
+  /* Label and value stop competing for one line. */
+  .about__row {
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+  .about__val {
+    text-align: left;
+  }
+
+  /* Give the name every pixel available. */
+  .hero__name {
+    letter-spacing: -0.035em;
+  }
+}
+
+/* --- Touch input -------------------------------------------------------- */
+@media (pointer: coarse) {
+  /* Hover-only affordances never fire on touch, so stop reserving motion for
+     them and make the real tap targets big enough to hit. */
+  .btn,
+  .bar__chip,
+  .panel__links a {
+    padding-block: 0.55rem;
+  }
+  .bar__chip {
+    padding-inline: 0.85rem;
+  }
+  .chip:hover,
+  .panel:hover,
+  .now__card:hover,
+  .panel__links a:hover {
+    transform: none;
+  }
+}

@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react'
 import { nav, profile } from '../data/profile.js'
 import { useActiveSection, useReveal, useScrolled } from '../hooks.js'
 
@@ -64,6 +65,51 @@ export function Rail() {
   )
 }
 
+/**
+ * Small screens hide both the left rail and the inline bar links, which would
+ * otherwise leave a phone with no way to reach any section. This strip takes
+ * over there: a horizontally scrollable row of section chips that keeps the
+ * current one scrolled into view.
+ */
+function SectionStrip({ active }) {
+  const trackRef = useRef(null)
+
+  useEffect(() => {
+    const track = trackRef.current
+    if (!track) return
+    // Only worth doing while the strip is the visible navigation. An ancestor
+    // set to display:none leaves this element's own computed display intact,
+    // so test for a rendered box instead.
+    if (!track.clientWidth) return
+
+    const chip = track.querySelector('[aria-current="true"]')
+    if (!chip) return
+
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    // scrollIntoView on the chip would also scroll the page; move the track.
+    const target =
+      chip.offsetLeft - track.clientWidth / 2 + chip.offsetWidth / 2
+    track.scrollTo({ left: target, behavior: reduced ? 'auto' : 'smooth' })
+  }, [active])
+
+  return (
+    <nav className="bar__strip" aria-label="Sections">
+      <div className="bar__track" ref={trackRef}>
+        {nav.map((item) => (
+          <a
+            key={item.id}
+            className="bar__chip"
+            href={`#${item.id}`}
+            aria-current={active === item.id ? 'true' : undefined}
+          >
+            {item.label}
+          </a>
+        ))}
+      </div>
+    </nav>
+  )
+}
+
 export function Bar() {
   const active = useActiveSection(NAV_IDS)
   const stuck = useScrolled()
@@ -99,6 +145,8 @@ export function Bar() {
           </a>
         )}
       </div>
+
+      <SectionStrip active={active} />
     </header>
   )
 }

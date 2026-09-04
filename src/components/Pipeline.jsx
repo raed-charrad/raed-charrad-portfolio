@@ -79,18 +79,33 @@ export default function Pipeline() {
         const needed = n * nodeW + (n - 1) * minGap + pad * 2
 
         if (needed <= w || s === CANDIDATES.length - 1) {
-          const gap = n > 1 ? Math.max((w - pad * 2 - n * nodeW) / (n - 1), minGap) : 0
+          let boxW = nodeW
+          let gap = n > 1 ? (w - pad * 2 - n * boxW) / (n - 1) : 0
+
+          // On a very narrow canvas even the simplest stage set can overflow.
+          // Hold a minimum gap and give the nodes whatever width is left, so
+          // the row always fits inside the canvas rather than running off it.
+          if (gap < minGap) {
+            gap = Math.min(minGap, 8)
+            boxW = n > 0 ? (w - pad * 2 - (n - 1) * gap) / n : boxW
+          }
+
+          // Shrink the type if a label would now spill out of its own box.
+          const widest = Math.max(...labels.map((l) => ctx.measureText(l).width))
+          const fsFit =
+            widest + 12 > boxW ? Math.max(7, (fs * (boxW - 12)) / widest) : fs
+
           const nodeH = 34
           const cy = Math.round(h / 2)
           return {
-            fs,
+            fs: fsFit,
             cy,
             nodeH,
             nodes: labels.map((label, i) => ({
               label,
               idx: idxs[i],
-              x: pad + i * (nodeW + gap),
-              w: nodeW,
+              x: pad + i * (boxW + gap),
+              w: boxW,
             })),
           }
         }
