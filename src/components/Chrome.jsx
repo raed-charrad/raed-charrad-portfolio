@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import { asset } from '../asset.js'
 import { nav, profile } from '../data/profile.js'
 import { useActiveSection, useReveal, useScrolled } from '../hooks.js'
 
@@ -136,7 +137,7 @@ export function Bar() {
         </nav>
 
         {profile.resume ? (
-          <a className="btn" href={profile.resume} download>
+          <a className="btn" href={asset(profile.resume)} download>
             CV
           </a>
         ) : (

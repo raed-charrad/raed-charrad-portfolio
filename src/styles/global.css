@@ -1328,3 +1328,119 @@ ul {
 .panel > .more {
   flex: none;
 }
+
+/* --- Hero portrait: framed like another node on the canvas -------------- */
+/* The hero is a flat grid so the portrait can sit beside the name. Areas do
+   the arranging, which lets the same markup read as a tall portrait column on
+   desktop and a compact avatar beside the name on a phone. */
+.hero__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    'status  portrait'
+    'name    portrait'
+    'focus   portrait'
+    'tagline portrait'
+    'actions portrait';
+  column-gap: clamp(1.5rem, 5vw, 3.5rem);
+  align-items: start;
+}
+.hero__status {
+  grid-area: status;
+  /* Grid blockifies children, so inline-flex would stretch the pill. */
+  justify-self: start;
+}
+.hero__name {
+  grid-area: name;
+}
+.hero__focus {
+  grid-area: focus;
+}
+.hero__tagline {
+  grid-area: tagline;
+}
+.hero__actions {
+  grid-area: actions;
+}
+.hero__portrait {
+  grid-area: portrait;
+  margin: 0;
+  width: clamp(160px, 21vw, 250px);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  background: var(--panel);
+  padding: 6px;
+  display: grid;
+  gap: 0.5rem;
+  align-content: start;
+  transition: border-color 0.35s var(--ease);
+}
+.hero__portrait:hover {
+  border-color: var(--line-bright);
+}
+.hero__portrait img {
+  width: 100%;
+  height: auto;
+  border-radius: calc(var(--r) - 4px);
+}
+.hero__portrait figcaption {
+  padding: 0 0.35rem 0.2rem;
+}
+
+/* No portrait: the text should use the whole width, not leave a phantom gap. */
+.hero__grid:not(:has(.hero__portrait)) {
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas: 'status' 'name' 'focus' 'tagline' 'actions';
+}
+
+@media (max-width: 760px) {
+  /* The avatar keeps the name company on the top row; everything below it
+     spans the full width so the tagline is never squeezed into a column. */
+  .hero__grid {
+    grid-template-areas:
+      'status  portrait'
+      'name    portrait'
+      'focus   focus'
+      'tagline tagline'
+      'actions actions';
+    column-gap: 0.9rem;
+  }
+  .hero__portrait {
+    width: 104px;
+    padding: 5px;
+    align-self: center;
+  }
+  /* A 2:3 portrait this small is a tall sliver. Crop to a square avatar,
+     biased upward so the head stays framed. */
+  .hero__portrait img {
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    object-position: 50% 12%;
+  }
+  .hero__portrait figcaption {
+    display: none;
+  }
+}
+
+@media (max-width: 560px) {
+  /* Four buttons wrap to a ragged second row with one link orphaned. Give the
+     primary action its own full-width row and let the three links share the
+     next one. */
+  .hero__actions {
+    gap: 0.5rem;
+  }
+  .hero__actions .btn--solid {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 400px) {
+  /* Name and avatar are now competing for one line — give the name room. */
+  .hero__name {
+    font-size: 2.75rem;
+  }
+  .hero__portrait {
+    width: 88px;
+  }
+}

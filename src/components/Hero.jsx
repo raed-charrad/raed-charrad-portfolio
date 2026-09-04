@@ -1,3 +1,4 @@
+import { asset } from '../asset.js'
 import { metrics, profile } from '../data/profile.js'
 import { useCountUp, useCycle } from '../hooks.js'
 import Pipeline from './Pipeline.jsx'
@@ -46,37 +47,54 @@ export default function Hero() {
   return (
     <div className="hero" id="top">
       <div className="shell">
-        <p className="hero__status">
-          <span className="pulse" aria-hidden="true" />
-          {/* Open to opportunities ·  */}
-          {profile.location}
-        </p>
+        {/* Flat grid on purpose: the portrait has to be a sibling of the name
+            so the two can share a row on narrow screens. Arrangement lives in
+            grid-template-areas, which differ per breakpoint. */}
+        <div className="hero__grid">
+          <p className="hero__status">
+            <span className="pulse" aria-hidden="true" />
+            {profile.location}
+          </p>
 
-        <h1 className="hero__name">
-          <span>{given}</span>
-          {surname && <span className="is-flow">{surname}</span>}
-        </h1>
+          <h1 className="hero__name">
+            <span>{given}</span>
+            {surname && <span className="is-flow">{surname}</span>}
+          </h1>
 
-        <Focus />
+          <Focus />
 
-        <p className="hero__tagline">{profile.tagline}</p>
+          <p className="hero__tagline">{profile.tagline}</p>
 
-        <div className="hero__actions">
-          <a className="btn btn--solid" href="#work">
-            See the work
-          </a>
-          {profile.links.map((l) => (
-            <a
-              key={l.label}
-              className="btn"
-              href={l.href}
-              {...(l.href.startsWith('http')
-                ? { target: '_blank', rel: 'noreferrer noopener' }
-                : {})}
-            >
-              {l.label}
+          <div className="hero__actions">
+            <a className="btn btn--solid" href="#work">
+              See the work
             </a>
-          ))}
+            {profile.links.map((l) => (
+              <a
+                key={l.label}
+                className="btn"
+                href={l.href}
+                {...(l.href.startsWith('http')
+                  ? { target: '_blank', rel: 'noreferrer noopener' }
+                  : {})}
+              >
+                {l.label}
+              </a>
+            ))}
+          </div>
+
+          {profile.portrait && (
+            <figure className="hero__portrait">
+              <img
+                src={asset(profile.portrait)}
+                alt={profile.name}
+                width="760"
+                height="1140"
+                loading="eager"
+              />
+              <figcaption className="eyebrow">{profile.role}</figcaption>
+            </figure>
+          )}
         </div>
 
         <Pipeline />

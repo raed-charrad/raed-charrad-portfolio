@@ -16,7 +16,7 @@ export const profile = {
   role: 'Software Engineer & Co-founder',
   location: 'Aouina, Tunis',
   email: 'raidcharrad@gmail.com',
-  phone: '+216 90 425 800',
+  phone: '+216 54 575 220',
 
   // Cycled one at a time under the name. Always rendered, never empty.
   focuses: ['Full Stack', 'Data Engineering', 'Systems Integration'],
@@ -32,8 +32,13 @@ export const profile = {
     'Alongside that I co-founded UltimateIT, a software studio building web, mobile and DevOps work for clients in Germany. We ship ordering and delivery platforms that real restaurants take real money through, which is a very direct way to learn what "production" means.',
   ],
 
-  // Drop an image in /public and set e.g. '/portrait.jpg'. null hides the frame.
-  portrait: null,
+  // Shown as a framed portrait beside the hero text; null removes the frame
+  // and the hero goes full width. Keep the file small — it is above the fold.
+  // Paths here are resolved through src/asset.js against the site's base URL,
+  // so write them as '/name.ext' and they work at a subpath too.
+  // The committed portrait.jpg is a 760px downscale; the full-res original is
+  // at ./portrait-original.jpg (gitignored).
+  portrait: '/portrait.jpg',
 
   // No CV published — the PDF was removed (it carried your phone number), so
   // the top-bar button falls back to "Contact". To re-add one: drop the file in
@@ -43,7 +48,7 @@ export const profile = {
   links: [
     { label: 'Email', href: 'mailto:raidcharrad@gmail.com' },
     { label: 'GitHub', href: 'https://github.com/raed-charrad' },
-    { label: 'LinkedIn', href: 'https://www.linkedin.com/in/raed-charrad-53387a200/' },
+    { label: 'LinkedIn', href: 'https://www.linkedin.com/in/raed-charrad/' },
   ],
 }
 

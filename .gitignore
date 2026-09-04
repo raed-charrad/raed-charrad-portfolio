@@ -7,3 +7,6 @@ dist/
 *.local
 # Tooling caches
 .vite
+
+# Full-resolution source of public/portrait.jpg, not needed by the build.
+/portrait-original.jpg
