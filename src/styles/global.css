@@ -339,18 +339,30 @@ ul {
   color: var(--faint);
 }
 
+/* Hidden until focused. It must NOT be parked at a large negative offset:
+   in an RTL document that offset becomes scrollable overflow, which made the
+   page 9999px wider than the viewport and opened it on an empty right edge.
+   Clipping to nothing takes it out of view without affecting layout at all. */
 .skip-link {
   position: absolute;
-  left: -9999px;
+  top: 0;
+  inset-inline-start: 0;
   z-index: 100;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
   background: var(--flow);
   color: #06090e;
   padding: 0.7rem 1.1rem;
   font-size: 0.875rem;
 }
 .skip-link:focus {
-  left: 0;
-  top: 0;
+  width: auto;
+  height: auto;
+  overflow: visible;
+  clip-path: none;
 }
 
 .chip {
@@ -1442,5 +1454,456 @@ ul {
   }
   .hero__portrait {
     width: 88px;
+  }
+}
+
+/* ==========================================================================
+   PROJECT PREVIEWS
+   --------------------------------------------------------------------------
+   Looping diagrams at the top of each project panel. Every rule below is
+   written so the element's BASE state is the finished diagram, and keyframes
+   only animate away from and back to it. Disabling animation therefore leaves
+   a complete, readable picture rather than an empty frame.
+   ========================================================================== */
+.pv {
+  margin: calc(clamp(1.25rem, 3vw, 2rem) * -1);
+  margin-bottom: 0.35rem;
+  border-bottom: 1px solid var(--line);
+  background: linear-gradient(180deg, rgba(76, 141, 255, 0.05), transparent 70%);
+  overflow: hidden;
+}
+.pv svg {
+  display: block;
+  width: 100%;
+  height: clamp(96px, 20vw, 132px);
+}
+
+/* --- shared marks ------------------------------------------------------- */
+.pv-line {
+  stroke: var(--line-bright);
+  stroke-width: 1;
+  fill: none;
+}
+.pv-dashed {
+  stroke-dasharray: 3 3;
+}
+.pv-panel {
+  fill: rgba(22, 32, 45, 0.55);
+  stroke: var(--line);
+  stroke-width: 1;
+}
+.pv-node rect,
+.pv-node {
+  fill: var(--panel);
+  stroke: var(--line-bright);
+  stroke-width: 1;
+}
+.pv-node--flow rect {
+  stroke: var(--flow);
+}
+.pv-node--model rect {
+  stroke: var(--model);
+}
+.pv-txt {
+  font-family: var(--mono);
+  font-size: 9px;
+  fill: var(--dim);
+  stroke: none;
+}
+.pv-txt--dim {
+  fill: var(--faint);
+}
+.pv-grid line {
+  stroke: var(--line);
+  stroke-width: 1;
+}
+.pv-track {
+  fill: var(--line);
+}
+
+/* --- a packet in flight ------------------------------------------------- */
+/* Rests mid-path so a still frame reads as "data moving", not "nothing here". */
+.pv-pkt {
+  fill: var(--flow);
+  transform: translateX(140px);
+  animation: pv-travel 3.2s var(--ease) infinite;
+}
+.pv-pkt--short {
+  animation-duration: 2.4s;
+  animation-name: pv-travel-short;
+}
+.pv-pkt--row {
+  animation-duration: 2.6s;
+  animation-name: pv-travel-row;
+}
+@keyframes pv-travel {
+  0% { transform: translateX(78px); opacity: 0; }
+  12% { opacity: 1; }
+  /* the failed attempt: stops short and slips back */
+  38% { transform: translateX(150px); }
+  48% { transform: translateX(112px); opacity: 0.45; }
+  60% { transform: translateX(150px); opacity: 1; }
+  88%, 100% { transform: translateX(180px); opacity: 0; }
+}
+@keyframes pv-travel-short {
+  0% { transform: translateX(166px); opacity: 0; }
+  15%, 85% { opacity: 1; }
+  100% { transform: translateX(206px); opacity: 0; }
+}
+@keyframes pv-travel-row {
+  0% { transform: translateX(0); opacity: 0; }
+  20%, 80% { opacity: 1; }
+  100% { transform: translateX(88px); opacity: 0; }
+}
+
+/* --- progress fills ----------------------------------------------------- */
+/* Base = full, so the resting diagram shows a completed circuit. */
+.pv-fill {
+  fill: var(--flow);
+  transform-origin: left center;
+  animation: pv-fill 3.2s var(--ease) infinite;
+}
+.pv-fill--slow {
+  animation-duration: 4.4s;
+}
+@keyframes pv-fill {
+  0%, 10% { transform: scaleX(0.02); }
+  70%, 100% { transform: scaleX(1); }
+}
+.pv-ok {
+  fill: var(--live);
+  animation: pv-blink 3.2s var(--ease) infinite;
+}
+@keyframes pv-blink {
+  0%, 60% { opacity: 0.2; }
+  75%, 100% { opacity: 1; }
+}
+
+/* --- elements that arrive ----------------------------------------------- */
+.pv-drop {
+  fill: var(--line-bright);
+  animation: pv-drop 3.6s var(--ease) infinite;
+}
+@keyframes pv-drop {
+  0% { opacity: 0; transform: translateY(-7px); }
+  18%, 88% { opacity: 1; transform: none; }
+  100% { opacity: 0; transform: none; }
+}
+.pv-pulse {
+  fill: var(--line-bright);
+  animation: pv-pulse 2.8s var(--ease) infinite;
+}
+@keyframes pv-pulse {
+  0%, 100% { opacity: 0.35; }
+  50% { opacity: 1; }
+}
+.pv-tick {
+  fill: var(--live);
+  animation: pv-blink 3.6s var(--ease) infinite;
+}
+
+/* --- warehouse ---------------------------------------------------------- */
+.pv-dim {
+  fill: var(--panel);
+  stroke: var(--flow);
+  stroke-width: 1;
+  animation: pv-pulse 3s var(--ease) infinite;
+}
+.pv-fact {
+  stroke: var(--model);
+}
+.pv-bar {
+  fill: var(--flow);
+  opacity: 0.85;
+  animation: pv-grow 3.4s var(--ease) infinite;
+}
+@keyframes pv-grow {
+  0%, 8% { transform: scaleY(0.04); }
+  55%, 100% { transform: scaleY(1); }
+}
+
+/* --- route -------------------------------------------------------------- */
+.pv-route {
+  fill: none;
+  stroke: var(--line-bright);
+  stroke-width: 1.5;
+}
+/* The traced overlay rests fully drawn. */
+.pv-route--trace {
+  stroke: var(--flow);
+  stroke-width: 1.5;
+  stroke-dasharray: 420;
+  stroke-dashoffset: 0;
+  animation: pv-trace 4.2s linear infinite;
+}
+@keyframes pv-trace {
+  0% { stroke-dashoffset: 420; }
+  100% { stroke-dashoffset: 0; }
+}
+.pv-driver {
+  fill: var(--flow);
+}
+.pv-stop {
+  stroke: var(--line-bright);
+}
+.pv-pin circle {
+  fill: var(--model);
+}
+.pv-pin__halo {
+  fill: none;
+  stroke: var(--model);
+  animation: pv-halo 2.4s var(--ease) infinite;
+}
+@keyframes pv-halo {
+  0% { r: 5; opacity: 0.9; }
+  100% { r: 13; opacity: 0; }
+}
+
+/* --- component grid ----------------------------------------------------- */
+.pv-cell {
+  fill: var(--panel);
+  stroke: var(--line-bright);
+  stroke-width: 1;
+  animation: pv-light 3.8s var(--ease) infinite;
+}
+@keyframes pv-light {
+  0%, 70%, 100% { stroke: var(--line-bright); }
+  20%, 40% { stroke: var(--flow); }
+}
+
+/* --- migration ---------------------------------------------------------- */
+.pv-src {
+  fill: var(--line-bright);
+}
+.pv-dst {
+  fill: var(--panel);
+  stroke: var(--line-bright);
+  stroke-width: 1;
+  animation: pv-pulse 2.6s var(--ease) infinite;
+}
+
+/* --- pdf ---------------------------------------------------------------- */
+.pv-page {
+  fill: var(--panel);
+  stroke: var(--line-bright);
+  stroke-width: 1;
+  animation: pv-drop 4s var(--ease) infinite;
+}
+.pv-thumb {
+  fill: var(--flow);
+  animation: pv-scroll 4s var(--ease) infinite;
+}
+@keyframes pv-scroll {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(62px); }
+}
+
+/* --- motion off: the diagrams stand still, and still make sense --------- */
+@media (prefers-reduced-motion: reduce) {
+  .pv * {
+    animation: none !important;
+  }
+  .pv .pv-route--trace {
+    stroke-dashoffset: 0;
+  }
+}
+
+@media (max-width: 560px) {
+  .pv {
+    margin: -1.15rem;
+    margin-bottom: 0.35rem;
+  }
+}
+
+/* ==========================================================================
+   MULTILINGUAL
+   --------------------------------------------------------------------------
+   The <html> element carries lang and dir (set from src/i18n.jsx). Logical
+   properties do most of the mirroring on their own; the rules below fix the
+   handful of places that were written with physical left/right.
+   ========================================================================== */
+
+/* --- Arabic typography --------------------------------------------------- */
+/* Bricolage Grotesque and IBM Plex Mono have no Arabic coverage, so Arabic
+   would silently fall back to a system face and lose the whole type system.
+   IBM Plex Sans Arabic is the same family's Arabic sibling. */
+:root:lang(ar),
+[lang='ar'] {
+  --display: 'IBM Plex Sans Arabic', 'Noto Kufi Arabic', system-ui, sans-serif;
+  --body: 'IBM Plex Sans Arabic', system-ui, sans-serif;
+  --mono: 'IBM Plex Sans Arabic', ui-monospace, monospace;
+}
+/* Arabic has no capitals, so uppercase transforms do nothing but the extra
+   letter-spacing breaks the cursive joins between letters. */
+[lang='ar'] .eyebrow,
+[lang='ar'] .btn,
+[lang='ar'] .bar__chip,
+[lang='ar'] .rail__tip,
+[lang='ar'] .now__state,
+[lang='ar'] .xp__now,
+[lang='ar'] .more,
+[lang='ar'] .panel__go,
+[lang='ar'] .panel__links a,
+[lang='ar'] .hero__status,
+[lang='ar'] .foot span,
+[lang='ar'] .foot a {
+  text-transform: none;
+  letter-spacing: 0;
+}
+/* Arabic script needs more vertical room than Latin at the same size. */
+[lang='ar'] body {
+  line-height: 1.85;
+}
+[lang='ar'] .hero__name {
+  letter-spacing: 0;
+  line-height: 1.15;
+}
+
+/* --- Direction-aware layout --------------------------------------------- */
+[dir='rtl'] .page {
+  padding-left: 0;
+  padding-right: var(--rail);
+}
+@media (max-width: 900px) {
+  [dir='rtl'] .page {
+    padding-right: 0;
+  }
+}
+[dir='rtl'] .rail {
+  left: auto;
+  right: 0;
+  border-right: 0;
+  border-left: 1px solid var(--line);
+}
+[dir='rtl'] .rail__tip {
+  left: auto;
+  right: calc(100% + 0.6rem);
+  transform: translateX(4px);
+}
+[dir='rtl'] .rail__link:hover .rail__tip,
+[dir='rtl'] .rail__link:focus-visible .rail__tip {
+  transform: none;
+}
+
+/* Bullet markers and their indents sit on the start edge, not the left. */
+[dir='rtl'] .panel__points li,
+[dir='rtl'] .xp__points li {
+  padding-left: 0;
+  padding-right: 1.1rem;
+}
+[dir='rtl'] .panel__points li::before,
+[dir='rtl'] .xp__points li::before {
+  left: auto;
+  right: 0;
+}
+
+/* Gradients and underlines have a fixed direction and must be flipped. */
+[dir='rtl'] .section__rule {
+  background: linear-gradient(270deg, var(--line-bright), transparent);
+}
+[dir='rtl'] .link::after {
+  transform-origin: right;
+}
+[dir='rtl'] .pv-fill,
+[dir='rtl'] .about__val {
+  transform-origin: right center;
+}
+[dir='rtl'] .about__val {
+  text-align: left;
+}
+[dir='rtl'] .lang__menu {
+  right: auto;
+  left: 0;
+}
+
+/* The arrow glyph points away from the text, so mirror it in RTL. */
+[dir='rtl'] .panel__links a svg,
+[dir='rtl'] .foot a {
+  transform: scaleX(-1);
+}
+[dir='rtl'] .panel__links a:hover svg {
+  transform: scaleX(-1) translate(2px, -2px);
+}
+
+/* The pipeline canvas and the project diagrams depict data flowing left to
+   right. That is a technical convention, not prose — mirroring it would say
+   the data flows the other way — so they stay LTR in every language. */
+.pv,
+.pipe__canvas {
+  direction: ltr;
+}
+
+/* --- Language picker ---------------------------------------------------- */
+.bar__end {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.lang {
+  position: relative;
+}
+.lang__btn {
+  gap: 0.4rem;
+}
+.lang__menu {
+  position: absolute;
+  top: calc(100% + 0.45rem);
+  right: 0;
+  z-index: 60;
+  min-width: 11rem;
+  display: grid;
+  gap: 2px;
+  padding: 4px;
+  background: var(--panel);
+  border: 1px solid var(--line-bright);
+  border-radius: 8px;
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.45);
+}
+.lang__item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  width: 100%;
+  padding: 0.5rem 0.6rem;
+  border: 0;
+  border-radius: 5px;
+  background: transparent;
+  color: var(--dim);
+  font-family: var(--body);
+  font-size: 0.875rem;
+  text-align: start;
+  cursor: pointer;
+  transition: background 0.18s var(--ease), color 0.18s var(--ease);
+}
+.lang__item:hover {
+  background: var(--panel-lift);
+  color: var(--ink);
+}
+.lang__item[aria-selected='true'] {
+  color: var(--ink);
+  background: var(--flow-soft);
+}
+.lang__code {
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-size: 0.625rem;
+  letter-spacing: 0.08em;
+  color: var(--faint);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 0.1rem 0.3rem;
+  min-width: 2rem;
+  text-align: center;
+  flex: none;
+}
+.lang__item[aria-selected='true'] .lang__code {
+  color: var(--flow);
+  border-color: var(--flow);
+}
+
+@media (max-width: 380px) {
+  /* Keep the language control; drop the redundant contact button, which is
+     also the whole Contact section below. */
+  .bar__end .btn:not(.lang__btn) {
+    display: none;
   }
 }

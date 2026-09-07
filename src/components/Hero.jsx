@@ -1,5 +1,5 @@
 import { asset } from '../asset.js'
-import { metrics, profile } from '../data/profile.js'
+import { useContent } from '../i18n.jsx'
 import { useCountUp, useCycle } from '../hooks.js'
 import Pipeline from './Pipeline.jsx'
 
@@ -8,12 +8,15 @@ import Pipeline from './Pipeline.jsx'
  * shown, so the line always occupies its space and is never briefly empty.
  */
 function Focus() {
+  const { profile, ui } = useContent()
   const i = useCycle(profile.focuses.length, 2600)
+  // Reserve the widest option so the line never reflows mid-cycle. `ch` is a
+  // rough measure in a proportional face, but it only needs to be generous.
   const width = Math.max(...profile.focuses.map((f) => f.length))
 
   return (
     <p className="hero__focus">
-      <span>Working in</span>
+      <span>{ui.workingIn}</span>
       <span className="hero__slot" style={{ minWidth: `${width}ch` }}>
         {profile.focuses.map((f, n) => (
           <span key={f} data-on={n === i ? 'true' : undefined} aria-hidden={n !== i}>
@@ -31,7 +34,9 @@ function Metric({ value, suffix, label }) {
   return (
     <div className="metric" ref={ref}>
       <p className="metric__value">
-        {shown}
+        {/* Digits follow the document language, so Arabic gets Arabic numerals
+            if the font provides them; the value itself is locale-formatted. */}
+        {shown.toLocaleString()}
         <em>{suffix}</em>
       </p>
       <p className="metric__label">{label}</p>
@@ -40,6 +45,8 @@ function Metric({ value, suffix, label }) {
 }
 
 export default function Hero() {
+  const { profile, metrics, ui } = useContent()
+
   const parts = profile.name.trim().split(/\s+/)
   const surname = parts.length > 1 ? parts.pop() : null
   const given = parts.join(' ')
@@ -67,11 +74,11 @@ export default function Hero() {
 
           <div className="hero__actions">
             <a className="btn btn--solid" href="#work">
-              See the work
+              {ui.seeWork}
             </a>
             {profile.links.map((l) => (
               <a
-                key={l.label}
+                key={l.id}
                 className="btn"
                 href={l.href}
                 {...(l.href.startsWith('http')
@@ -101,7 +108,7 @@ export default function Hero() {
 
         <div className="metrics">
           {metrics.map((m) => (
-            <Metric key={m.label} {...m} />
+            <Metric key={m.id} {...m} />
           ))}
         </div>
       </div>

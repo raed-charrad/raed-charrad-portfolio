@@ -1,10 +1,11 @@
 import { useEffect, useRef } from 'react'
-import { pipeline } from '../data/profile.js'
+import { useContent } from '../i18n.jsx'
 import { useCycle } from '../hooks.js'
 
-/* Stages that represent the AI half of the work are tinted amber; everything
-   else is the cobalt "data flow" accent. Colour carries role, not decoration. */
-const MODEL_STAGES = new Set(['Model'])
+/* The stage representing the AI half of the work is tinted amber; everything
+   else is the cobalt "data flow" accent. Colour carries role, not decoration.
+   Keyed by the language-neutral stage id, not by its translated label. */
+const MODEL_STAGES = new Set(['model'])
 
 const font = (px) => `500 ${px}px "IBM Plex Mono", ui-monospace, monospace`
 
@@ -19,14 +20,18 @@ function roundRect(ctx, x, y, w, h, r) {
 }
 
 /**
- * The hero diagram: the real stages a document travels through in Raed's work,
- * with data visibly moving between them. Drawn on canvas rather than as SVG
- * paths so the particles cost nothing in DOM.
+ * The hero diagram: the real stages a document travels through, with data
+ * visibly moving between them. Drawn on canvas rather than as SVG paths so the
+ * particles cost nothing in DOM.
  *
  * Node count adapts to the available width — full labels, then short labels,
  * then a reduced set of stages — so nothing is ever clipped or overlapped.
+ * The diagram always reads left-to-right, including in RTL: it depicts a
+ * technical data flow, not prose, and mirroring it would invert the meaning.
  */
 export default function Pipeline() {
+  const { pipeline, ui } = useContent()
+
   const active = useCycle(pipeline.length, 2200)
   const activeRef = useRef(0)
   activeRef.current = active
@@ -72,7 +77,7 @@ export default function Pipeline() {
       ctx.font = font(fs)
 
       for (let s = 0; s < CANDIDATES.length; s++) {
-        const idxs = CANDIDATES[s]
+        const idxs = CANDIDATES[s].filter((i) => i < pipeline.length)
         const labels = idxs.map((i) => (s === 0 ? pipeline[i].label : pipeline[i].short))
         const nodeW = Math.max(...labels.map((l) => ctx.measureText(l).width)) + 22
         const n = labels.length
@@ -91,9 +96,10 @@ export default function Pipeline() {
           }
 
           // Shrink the type if a label would now spill out of its own box.
+          // Arabic and German labels run longer than English, so this does
+          // real work rather than only guarding the extremes.
           const widest = Math.max(...labels.map((l) => ctx.measureText(l).width))
-          const fsFit =
-            widest + 12 > boxW ? Math.max(7, (fs * (boxW - 12)) / widest) : fs
+          const fsFit = widest + 12 > boxW ? Math.max(7, (fs * (boxW - 12)) / widest) : fs
 
           const nodeH = 34
           const cy = Math.round(h / 2)
@@ -170,7 +176,7 @@ export default function Pipeline() {
 
       nodes.forEach((n) => {
         const isActive = n.idx === activeRef.current
-        const accent = MODEL_STAGES.has(pipeline[n.idx].short) ? C.model : C.flow
+        const accent = MODEL_STAGES.has(pipeline[n.idx].id) ? C.model : C.flow
 
         roundRect(ctx, n.x, cy - nodeH / 2, n.w, nodeH, 7)
         ctx.fillStyle = C.panel
@@ -227,12 +233,13 @@ export default function Pipeline() {
       ro?.disconnect()
       window.removeEventListener('resize', start)
     }
-  }, [])
+    // Re-measure when the language changes: the labels are different strings.
+  }, [pipeline])
 
   return (
     <figure className="pipe">
       <div className="pipe__head">
-        <span className="eyebrow">Document pipeline</span>
+        <span className="eyebrow">{ui.documentPipeline}</span>
         <span className="pipe__dots" aria-hidden="true">
           <i />
           <i />
@@ -244,12 +251,12 @@ export default function Pipeline() {
         ref={canvasRef}
         className="pipe__canvas"
         role="img"
-        aria-label={`Pipeline diagram: ${pipeline.map((s) => s.label).join(' to ')}`}
+        aria-label={`${ui.documentPipeline}: ${pipeline.map((s) => s.label).join(' → ')}`}
       />
 
       <ul className="pipe__legend">
         {pipeline.map((stage, i) => (
-          <li key={stage.label} data-on={i === active ? 'true' : undefined}>
+          <li key={stage.id} data-on={i === active ? 'true' : undefined}>
             <b>{stage.label}</b> — {stage.note}
           </li>
         ))}

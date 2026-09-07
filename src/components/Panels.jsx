@@ -1,15 +1,8 @@
-import {
-  education,
-  experience,
-  languages,
-  now,
-  profile,
-  projects,
-  skillGroups,
-} from '../data/profile.js'
 import { useId, useState } from 'react'
+import { useContent } from '../i18n.jsx'
 import { useMediaQuery, useSheen } from '../hooks.js'
 import { ArrowIcon, Chips } from './Chrome.jsx'
+import Preview from './Previews.jsx'
 
 /**
  * A bullet list that stays whole on desktop and collapses to a short preview on
@@ -20,6 +13,7 @@ import { ArrowIcon, Chips } from './Chrome.jsx'
  * points at stable content and the toggle reports real expanded state.
  */
 function Bullets({ items, className, preview = 2 }) {
+  const { ui } = useContent()
   const compact = useMediaQuery('(max-width: 640px)')
   const [open, setOpen] = useState(false)
   const id = useId()
@@ -48,7 +42,7 @@ function Bullets({ items, className, preview = 2 }) {
           aria-controls={id}
           onClick={() => setOpen((v) => !v)}
         >
-          {open ? 'Show less' : `Show ${hiddenCount} more`}
+          {open ? ui.showLess : ui.showMore(hiddenCount)}
           <span className="more__chev" aria-hidden="true">
             <svg width="9" height="6" viewBox="0 0 9 6" fill="none">
               <path
@@ -68,10 +62,12 @@ function Bullets({ items, className, preview = 2 }) {
 
 /* ------------------------------------------------------------------ Now --- */
 export function Now() {
+  const { now } = useContent()
+
   return (
     <div className="now">
       {now.map((item) => (
-        <article className="now__card" key={item.title}>
+        <article className="now__card" key={item.id}>
           <p className="now__state">
             <span className="pulse" aria-hidden="true" />
             {item.state}
@@ -86,6 +82,8 @@ export function Now() {
 
 /* ---------------------------------------------------------------- About --- */
 export function About() {
+  const { profile, education, spokenLanguages, ui } = useContent()
+
   return (
     <div className="about">
       <div className="about__body">
@@ -96,9 +94,9 @@ export function About() {
 
       <div className="about__side">
         <div className="about__block">
-          <span className="eyebrow">Education</span>
+          <span className="eyebrow">{ui.education}</span>
           {education.map((e) => (
-            <div className="about__row" key={e.school}>
+            <div className="about__row" key={e.id}>
               <span className="about__key">
                 {e.school}
                 {e.detail && <span className="about__sub">{e.detail}</span>}
@@ -109,9 +107,9 @@ export function About() {
         </div>
 
         <div className="about__block">
-          <span className="eyebrow">Languages</span>
-          {languages.map((l) => (
-            <div className="about__row" key={l.name}>
+          <span className="eyebrow">{ui.languagesLabel}</span>
+          {spokenLanguages.map((l) => (
+            <div className="about__row" key={l.id}>
               <span className="about__key">{l.name}</span>
               <span className="about__val">{l.level}</span>
             </div>
@@ -124,14 +122,20 @@ export function About() {
 
 /* ----------------------------------------------------------------- Work --- */
 function Panel({ project, index, wide }) {
+  const { ui } = useContent()
   const sheen = useSheen()
 
   // The panel is always an <article>. It used to become an <a> when it had a
   // single href, but that cannot contain the "Show more" button, and wrapping
   // a whole panel of prose in one link reads badly in a screen reader. The
   // link now lives in the footer where it can be seen and described.
+  const footLinks =
+    project.links ?? (project.href ? [{ label: ui.viewProject, href: project.href }] : [])
+
   return (
     <article className={`panel${wide ? ' panel--wide' : ''}`} {...sheen}>
+      <Preview kind={project.preview} />
+
       <div className="panel__top">
         <span className="panel__no">{String(index + 1).padStart(2, '0')}</span>
         <span className="panel__no">{project.year}</span>
@@ -146,17 +150,15 @@ function Panel({ project, index, wide }) {
       <div className="panel__foot">
         <Chips items={project.tech} />
 
-        {(project.links?.length > 0 || project.href) && (
+        {footLinks.length > 0 && (
           <ul className="panel__links">
-            {(project.links ?? [{ label: 'View project', href: project.href }]).map(
-              (l) => (
-                <li key={l.href}>
-                  <a href={l.href} target="_blank" rel="noreferrer noopener">
-                    {l.label} <ArrowIcon />
-                  </a>
-                </li>
-              )
-            )}
+            {footLinks.map((l) => (
+              <li key={l.href}>
+                <a href={l.href} target="_blank" rel="noreferrer noopener">
+                  {l.label} <ArrowIcon />
+                </a>
+              </li>
+            ))}
           </ul>
         )}
       </div>
@@ -165,11 +167,13 @@ function Panel({ project, index, wide }) {
 }
 
 export function Work() {
+  const { projects } = useContent()
+
   // Half-width panels only pair up if they are adjacent. Authoring a half-width
   // project between two full-width ones used to leave it alone beside a column
   // of dead space, so layout is derived here rather than left to array order:
   // full-width panels first, then half-width ones. The sort is stable, so the
-  // order written in profile.js still holds within each tier.
+  // order written in core.js still holds within each tier.
   const ordered = [...projects].sort(
     (a, b) => Number(Boolean(b.featured)) - Number(Boolean(a.featured))
   )
@@ -182,7 +186,7 @@ export function Work() {
     <div className="work">
       {ordered.map((project, i) => (
         <Panel
-          key={project.title}
+          key={project.id}
           project={project}
           index={i}
           wide={project.featured || (strays && i === ordered.length - 1)}
@@ -194,20 +198,22 @@ export function Work() {
 
 /* ----------------------------------------------------------- Experience --- */
 export function Experience() {
+  const { experience, ui } = useContent()
+
   return (
     <div className="xp">
       {experience.map((job) => (
-        <article className="xp__item" key={`${job.company}-${job.start}`}>
+        <article className="xp__item" key={job.id}>
           <div className="xp__when">
             <span>
               {job.start}
               <br />
               <i>— {job.end}</i>
             </span>
-            {job.end === 'Present' && (
+            {job.isCurrent && (
               <span className="xp__now">
                 <span className="pulse" aria-hidden="true" />
-                Current
+                {ui.current}
               </span>
             )}
           </div>
@@ -233,12 +239,14 @@ export function Experience() {
 
 /* ---------------------------------------------------------------- Stack --- */
 export function Stack() {
+  const { skillGroups } = useContent()
+
   return (
     <div className="stack">
       {skillGroups.map((group) => (
         <div
           className={`stack__group${group.accent === 'model' ? ' stack__group--model' : ''}`}
-          key={group.label}
+          key={group.id}
         >
           <p className="eyebrow">{group.label}</p>
           <Chips items={group.items} accent={group.accent} />
@@ -250,19 +258,19 @@ export function Stack() {
 
 /* -------------------------------------------------------------- Contact --- */
 export function Contact() {
+  const { profile, ui, nav } = useContent()
+  const title = nav.find((n) => n.id === 'contact')?.title ?? ui.contact
+
   return (
     <section className="contact" id="contact">
       <div className="shell">
-        <span className="eyebrow">Contact</span>
+        <span className="eyebrow">{title}</span>
 
         <h2 className="contact__lead">
-          Let&rsquo;s build something <em>worth shipping.</em>
+          {ui.contactLead} <em>{ui.contactLeadAccent}</em>
         </h2>
 
-        <p className="contact__note">
-          Open to engineering roles and collaborations across full stack, data
-          engineering and applied AI. Email is the fastest way to reach me.
-        </p>
+        <p className="contact__note">{ui.contactNote}</p>
 
         <a className="contact__mail" href={`mailto:${profile.email}`}>
           {profile.email}
@@ -270,27 +278,29 @@ export function Contact() {
 
         <div className="contact__grid">
           <div className="contact__cell">
-            <span className="eyebrow">Phone</span>
-            <a className="link" href={`tel:${profile.phone.replace(/\s/g, '')}`}>
+            <span className="eyebrow">{ui.phone}</span>
+            {/* The tel: href stays in Latin digits whatever the display locale. */}
+            <a className="link" href={`tel:${profile.phone.replace(/\s/g, '')}`} dir="ltr">
               {profile.phone}
             </a>
           </div>
 
           <div className="contact__cell">
-            <span className="eyebrow">Location</span>
+            <span className="eyebrow">{ui.location}</span>
             <span className="contact__value">{profile.location}</span>
           </div>
 
           {profile.links
-            .filter((l) => l.label !== 'Email')
+            .filter((l) => l.id !== 'email')
             .map((l) => (
-              <div className="contact__cell" key={l.label}>
+              <div className="contact__cell" key={l.id}>
                 <span className="eyebrow">{l.label}</span>
                 <a
                   className="link"
                   href={l.href}
                   target="_blank"
                   rel="noreferrer noopener"
+                  dir="ltr"
                 >
                   {l.href.replace(/^https?:\/\/(www\.)?/, '')}
                 </a>
