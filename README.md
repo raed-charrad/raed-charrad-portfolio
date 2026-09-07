@@ -69,37 +69,34 @@ Put the image in `public/` and set `portrait: '/portrait.jpg'`.
 
 ## Deploying
 
-The repo is **private**, and GitHub Pages does not serve private repos on a
-free account — making it private deleted the Pages configuration outright, so
-the old `raed-charrad.github.io/raed-charrad-portfolio/` URL 404s. The site now
-builds from the private repo on a host that supports that for free.
+GitHub Pages, built by [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml)
+on every push to `main`. Live at
+**https://raed-charrad.github.io/raed-charrad-portfolio/**
 
-Everything is prepared: `base` is `/`, [`netlify.toml`](netlify.toml) carries
-the build settings, `public/_headers` sets caching, and `.nvmrc` pins Node 20.
-Connect the repo once and every push deploys.
+The one setting that matters is `base` in [`vite.config.js`](vite.config.js).
+Pages serves a project repo from a **subpath**, so it must be
+`'/raed-charrad-portfolio/'`. Set it to `'/'` and every asset URL loses the
+prefix the host actually needs, and all of them 404 on a page that still loads.
 
-**Cloudflare Pages** — Workers & Pages → Create → Pages → Connect to Git →
-pick this repo. Framework preset `Vite`, build command `npm run build`, output
-directory `dist`. Gives `<project>.pages.dev`.
+**`base` has to change with the host, every time:**
 
-**Netlify** — Add new site → Import from Git → pick this repo. It reads
-`netlify.toml`, so the build command and publish directory are already set.
-Gives `<site>.netlify.app`.
+| Where the site is served | `base` |
+| --- | --- |
+| GitHub Pages, project repo (now) | `'/raed-charrad-portfolio/'` |
+| Custom domain, or `raed-charrad.github.io` | `'/'` |
+| Cloudflare Pages / Netlify / Vercel | `'/'` |
 
-Both read `public/_headers` from the published output. Both accept a custom
-domain, which is worth doing — a portfolio on your own domain reads better than
-a platform subdomain.
+**Pages needs the repo public** on a free account. Making it private does not
+pause the site — it deletes the Pages configuration, and the URL starts
+returning 404. If you go private again, either pay for GitHub Pro or build from
+the private repo on Cloudflare Pages or Netlify (both free for that): set
+`base` to `'/'`, and recover `netlify.toml` and `public/_headers` from git
+history — commit `a100a25` has both.
 
-**Note on privacy:** a private repo keeps the *source* private. The published
-site is public either way — anyone with the URL sees every word of it. If the
-concern is the FAST connector and NeoForm write-ups describing NeoLedge's
-internal architecture, that has to be fixed in the content, not the repo
-visibility.
-
-**Going back to GitHub Pages** would mean making the repo public again (or
-paying for GitHub Pro) and setting `base` back to `'/raed-charrad-portfolio/'`
-in [`vite.config.js`](vite.config.js), or every asset 404s. The workflow that
-did it is recoverable from git history.
+**A public site is public regardless of repo visibility.** Anyone with the URL
+reads every word, including the FAST connector and NeoForm write-ups that
+describe NeoLedge's internal architecture. If that is the worry, it has to be
+fixed in the content, not the repo setting.
 
 ## Design
 
