@@ -3,8 +3,9 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [react()],
-  // GitHub Pages serves this repo from a subpath, so assets must be requested
-  // from there rather than the domain root. Change to '/' if you move to a
-  // custom domain or to raed-charrad.github.io.
-  base: '/raed-charrad-portfolio/',
+  // Cloudflare Pages and Netlify serve from the domain root, so assets are
+  // requested from '/'. This was '/raed-charrad-portfolio/' while the site ran
+  // on GitHub Pages, which serves a project repo from a subpath — if you ever
+  // move back there, set it to '/<repo-name>/' again or every asset 404s.
+  base: '/',
 })

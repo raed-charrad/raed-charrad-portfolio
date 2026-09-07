@@ -1,0 +1,8 @@
+# Netlify build settings. Cloudflare Pages ignores this file — set the same two
+# values in its dashboard (build command `npm run build`, output dir `dist`).
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "20"

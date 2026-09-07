@@ -69,20 +69,37 @@ Put the image in `public/` and set `portrait: '/portrait.jpg'`.
 
 ## Deploying
 
-The build output is static — any host works.
+The repo is **private**, and GitHub Pages does not serve private repos on a
+free account — making it private deleted the Pages configuration outright, so
+the old `raed-charrad.github.io/raed-charrad-portfolio/` URL 404s. The site now
+builds from the private repo on a host that supports that for free.
 
-**Netlify or Vercel** — connect the repo, build command `npm run build`,
-publish directory `dist`. Nothing else to configure.
+Everything is prepared: `base` is `/`, [`netlify.toml`](netlify.toml) carries
+the build settings, `public/_headers` sets caching, and `.nvmrc` pins Node 20.
+Connect the repo once and every push deploys.
 
-**GitHub Pages** — if the site lives at `username.github.io/repo-name/`, set the
-subpath in [`vite.config.js`](vite.config.js) first:
+**Cloudflare Pages** — Workers & Pages → Create → Pages → Connect to Git →
+pick this repo. Framework preset `Vite`, build command `npm run build`, output
+directory `dist`. Gives `<project>.pages.dev`.
 
-```js
-base: '/repo-name/',
-```
+**Netlify** — Add new site → Import from Git → pick this repo. It reads
+`netlify.toml`, so the build command and publish directory are already set.
+Gives `<site>.netlify.app`.
 
-Then publish `dist/`. For a custom domain or `username.github.io`, leave
-`base: '/'`.
+Both read `public/_headers` from the published output. Both accept a custom
+domain, which is worth doing — a portfolio on your own domain reads better than
+a platform subdomain.
+
+**Note on privacy:** a private repo keeps the *source* private. The published
+site is public either way — anyone with the URL sees every word of it. If the
+concern is the FAST connector and NeoForm write-ups describing NeoLedge's
+internal architecture, that has to be fixed in the content, not the repo
+visibility.
+
+**Going back to GitHub Pages** would mean making the repo public again (or
+paying for GitHub Pro) and setting `base` back to `'/raed-charrad-portfolio/'`
+in [`vite.config.js`](vite.config.js), or every asset 404s. The workflow that
+did it is recoverable from git history.
 
 ## Design
 
