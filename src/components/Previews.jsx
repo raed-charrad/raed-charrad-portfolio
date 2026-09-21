@@ -377,6 +377,59 @@ function PdfViewer() {
   )
 }
 
+/* ---------------------------------------------------------------------------
+   Elise Studio connectors — four engines and an OData service feed a bus,
+   pass a guard, and reach the platform.
+   ------------------------------------------------------------------------ */
+function Connectors() {
+  const sources = ['MSSQL', 'PGSQL', 'MySQL', 'ORACLE', 'OData']
+  const rowY = [6, 28, 50, 72, 94]
+  const BUS = 116
+  const CY = 57
+
+  return (
+    <Frame id="connectors">
+      {sources.map((label, i) => {
+        const cy = rowY[i] + 7
+        return (
+          <g key={label}>
+            <rect className="pv-node" x="8" y={rowY[i]} width="54" height="14" rx="3" />
+            <text className="pv-txt pv-src-txt" x="35" y={cy + 3} textAnchor="middle">
+              {label}
+            </text>
+            {/* stub into the bus, then the bus carries it down to the guard */}
+            <line className="pv-line" x1="62" y1={cy} x2={BUS} y2={cy} />
+            <circle
+              className="pv-pkt pv-pkt--stub"
+              cx="0"
+              cy={cy}
+              r="2.4"
+              style={{ animationDelay: `${i * 0.42}s` }}
+            />
+          </g>
+        )
+      })}
+
+      <line className="pv-line" x1={BUS} y1="13" x2={BUS} y2="101" />
+      <line className="pv-line" x1={BUS} y1={CY} x2="142" y2={CY} />
+
+      {/* the guard: every query passes through it */}
+      <g className="pv-guard">
+        <rect x="142" y="41" width="36" height="32" rx="6" />
+        <path d="M160 48 l7 3 v6 c0 4.5 -3 8 -7 9.5 c-4 -1.5 -7 -5 -7 -9.5 v-6 z" />
+      </g>
+      <text className="pv-txt pv-txt--dim" x="160" y="86" textAnchor="middle">
+        guard
+      </text>
+
+      <line className="pv-line" x1="178" y1={CY} x2="222" y2={CY} />
+      <circle className="pv-pkt pv-pkt--gate" cx="0" cy={CY} r="3" />
+
+      <Node x={222} y={43} w={86} h={28} label="Elise Studio" tone="flow" />
+    </Frame>
+  )
+}
+
 const PREVIEWS = {
   fast: Fast,
   neoform: NeoForm,
@@ -386,6 +439,7 @@ const PREVIEWS = {
   neolibrary: NeoLibrary,
   migration: Migration,
   pdf: PdfViewer,
+  connectors: Connectors,
 }
 
 /** Renders the preview named by a project's `preview` key, or nothing. */

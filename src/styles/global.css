@@ -1907,3 +1907,44 @@ ul {
     display: none;
   }
 }
+
+/* --- Elise Studio connectors preview ------------------------------------ */
+.pv-src-txt {
+  font-size: 8px;
+}
+/* Each source is read in turn; the packet crosses its stub into the bus. */
+.pv-pkt--stub {
+  animation-name: pv-stub;
+  animation-duration: 3.4s;
+}
+@keyframes pv-stub {
+  0% { transform: translateX(62px); opacity: 0; }
+  10%, 60% { opacity: 1; }
+  70%, 100% { transform: translateX(116px); opacity: 0; }
+}
+/* Then one packet leaves the guard for the platform. */
+.pv-pkt--gate {
+  animation-name: pv-gate;
+  animation-duration: 3.4s;
+}
+@keyframes pv-gate {
+  0%, 30% { transform: translateX(178px); opacity: 0; }
+  45% { opacity: 1; }
+  85%, 100% { transform: translateX(222px); opacity: 0; }
+}
+.pv-guard rect {
+  fill: var(--panel);
+  stroke: var(--live);
+  stroke-width: 1;
+  animation: pv-guard 3.4s var(--ease) infinite;
+}
+.pv-guard path {
+  fill: none;
+  stroke: var(--live);
+  stroke-width: 1.2;
+  stroke-linejoin: round;
+}
+@keyframes pv-guard {
+  0%, 25%, 55%, 100% { stroke: var(--live); }
+  38% { stroke: var(--flow); }
+}

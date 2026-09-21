@@ -24,7 +24,10 @@ export function Chips({ items, accent }) {
   return (
     <ul className={`chip-row${accent === 'model' ? ' chip-row--model' : ''}`}>
       {items.map((t) => (
-        <li key={t} className="chip">
+        // Technology names are Latin script. Without dir="ltr" the bidi
+        // algorithm hands leading punctuation to the paragraph direction, so
+        // ".NET" renders as "NET." on the Arabic page.
+        <li key={t} className="chip" dir="ltr">
           {t}
         </li>
       ))}

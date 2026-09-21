@@ -22,7 +22,7 @@ export const identity = {
 
   // Framed portrait beside the hero text; null removes the frame. Paths are
   // resolved through src/asset.js against the site's base URL.
-  portrait: '/portrait.jpg',
+  portrait: '/portrait.png',
 
   // Put a PDF in /public and point here to turn the top-bar button into a
   // download. It carried a phone number, which is why it is not published.
@@ -182,6 +182,28 @@ export const projects = [
     featured: false,
     preview: 'pdf',
     tech: ['TypeScript', 'PDF.js', 'Vue 3'],
+    href: null,
+  },
+  {
+    // CHECK git history shows 8 of 819 commits as yours, with Walid AZZOUZI as
+    // primary author. Every locale therefore scopes this to the connector work
+    // you actually did rather than to the platform as a whole. Adjust only if
+    // you owned more of it than the commits show.
+    id: 'elisestudio',
+    year: '2026',
+    featured: false,
+    preview: 'connectors',
+    tech: [
+      '.NET',
+      'OData',
+      'SQL Server',
+      'PostgreSQL',
+      'MySQL',
+      'Oracle',
+      'Vue 3',
+      'TypeScript',
+      'Playwright',
+    ],
     href: null,
   },
 ]

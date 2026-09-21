@@ -230,6 +230,20 @@ export default {
         'The team’s shared Vue 3 component library — an opinionated PrimeVue 4 abstraction layer of 35 enterprise components with Tailwind styling, full i18n, a Blockly visual-scripting surface and a schema-driven form renderer. I contribute components and fixes; it is published as a restricted npm package and documented in Storybook.',
       highlights: [],
     },
+    elisestudio: {
+      title: 'Elise Studio — Connectors',
+      kind: 'Contributor · Connector layer',
+      description:
+        'Elise Studio is a modular platform: one shell hosting nine full-stack modules, each with its own .NET API behind a YARP gateway that handles OIDC sign-in and resolves the tenant at the edge. The modules cover document generation (PDF and HTML), forms and their public submission service, a workflow orchestrator, a secrets vault, an AI agent, dashboards, tenant administration, and the master-data layer the others read their reference data from. My contribution is the connector layer inside that master-data module — what lets the platform read a customer’s own databases and OData services, and the guards that decide what a query is allowed to do.',
+      highlights: [
+        'Built the OData and SQL connector engines behind one database-engine abstraction, covering SQL Server, PostgreSQL, MySQL and Oracle.',
+        'Query guards for connection strings and for SQL and OData queries, so a connector cannot be pointed somewhere it should not reach.',
+        'Failure classification that turns a dead connection into a specific, actionable cause rather than a generic error, including hosts that resolve to several addresses.',
+        'Schema import from OData $metadata: probe the service, read the EDM model, work out the roles in the schema and compose an importable collection.',
+        'Vue 3 screens for the connector form, the query-import dialog and the usage panels, with server-side pagination and bulk actions.',
+        'Integration benches that run against real SQL Server, PostgreSQL, MySQL and Oracle instances in Docker, alongside unit tests and en/fr translations.',
+      ],
+    },
     migration: {
       title: 'Legacy Form Migration Tooling',
       kind: 'Internal tooling',
@@ -274,6 +288,7 @@ export default {
     airline: 'Rows flowing through ETL into a star schema, feeding a dashboard of bars',
     jibly: 'A driver tracked live along a route from restaurant to customer',
     neolibrary: 'A grid of shared components lighting up in sequence',
+    connectors: 'Queries from four database engines and an OData service passing through a guard into the platform',
     migration: 'Legacy XML and CSV definitions converted row by row into a spreadsheet',
     pdf: 'Pages rendering progressively as a document is scrolled',
   },

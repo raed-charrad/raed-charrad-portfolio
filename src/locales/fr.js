@@ -230,6 +230,20 @@ export default {
         'La bibliothèque de composants Vue 3 partagée de l’équipe — une couche d’abstraction opiniâtre au-dessus de PrimeVue 4, regroupant 35 composants d’entreprise avec styles Tailwind, internationalisation complète, une surface de scripting visuel Blockly et un moteur de rendu de formulaires piloté par schéma. J’y contribue des composants et des correctifs ; elle est publiée en paquet npm restreint et documentée dans Storybook.',
       highlights: [],
     },
+    elisestudio: {
+      title: 'Elise Studio — Connecteurs',
+      kind: 'Contributeur · Couche connecteurs',
+      description:
+        'Elise Studio est une plateforme modulaire : un shell unique qui héberge neuf modules full-stack, chacun avec sa propre API .NET derrière une passerelle YARP qui assure l’authentification OIDC et résout le tenant au bord. Les modules couvrent la génération documentaire (PDF et HTML), les formulaires et leur service public de dépôt, un orchestrateur de workflows, un coffre à secrets, un agent IA, des tableaux de bord, l’administration des tenants, et le socle de données de référence dans lequel les autres puisent. Ma contribution porte sur la couche connecteurs de ce socle — ce qui permet à la plateforme de lire les bases de données et les services OData du client, et les garde-fous qui décident de ce qu’une requête a le droit de faire.',
+      highlights: [
+        'Développement des moteurs de connecteurs OData et SQL derrière une même abstraction de moteur de base, couvrant SQL Server, PostgreSQL, MySQL et Oracle.',
+        'Garde-fous sur les chaînes de connexion et sur les requêtes SQL et OData, pour qu’un connecteur ne puisse pas être pointé là où il ne devrait pas aller.',
+        'Classification des échecs qui transforme une connexion morte en une cause précise et actionnable plutôt qu’en erreur générique, y compris pour les hôtes résolvant vers plusieurs adresses.',
+        'Import de schéma depuis les métadonnées OData : sonder le service, lire le modèle EDM, déterminer les rôles du schéma et composer une collection importable.',
+        'Écrans Vue 3 du formulaire de connecteur, du dialogue d’import de requête et des panneaux d’usage, avec pagination serveur et actions de masse.',
+        'Bancs d’intégration exécutés contre de vraies instances SQL Server, PostgreSQL, MySQL et Oracle dans Docker, avec tests unitaires et traductions en/fr.',
+      ],
+    },
     migration: {
       title: 'Outillage de migration des formulaires',
       kind: 'Outillage interne',
@@ -274,6 +288,7 @@ export default {
     airline: 'Des lignes traversant un ETL vers un schéma en étoile, alimentant un tableau de bord',
     jibly: 'Un livreur suivi en direct sur un trajet du restaurant jusqu’au client',
     neolibrary: 'Une grille de composants partagés s’allumant en séquence',
+    connectors: 'Des requêtes venant de quatre moteurs de bases et d’un service OData franchissant un garde-fou vers la plateforme',
     migration: 'Des définitions XML et CSV héritées converties ligne par ligne en classeur',
     pdf: 'Des pages qui s’affichent progressivement au fil du défilement',
   },

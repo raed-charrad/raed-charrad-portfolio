@@ -233,6 +233,20 @@ export default {
         'Die gemeinsame Vue-3-Komponentenbibliothek des Teams — eine Abstraktionsschicht über PrimeVue 4 mit 35 Enterprise-Komponenten, Tailwind-Styling, vollständiger Internationalisierung, einer visuellen Blockly-Skriptoberfläche und einem schemagesteuerten Formular-Renderer. Ich steuere Komponenten und Korrekturen bei; sie erscheint als eingeschränktes npm-Paket und ist in Storybook dokumentiert.',
       highlights: [],
     },
+    elisestudio: {
+      title: 'Elise Studio — Konnektoren',
+      kind: 'Mitwirkender · Konnektorschicht',
+      description:
+        'Elise Studio ist eine modulare Plattform: eine Shell, die neun Full-Stack-Module beherbergt, jedes mit eigener .NET-API hinter einem YARP-Gateway, das die OIDC-Anmeldung übernimmt und den Mandanten am Rand auflöst. Die Module umfassen Dokumenterzeugung (PDF und HTML), Formulare samt öffentlichem Einreichungsdienst, einen Workflow-Orchestrator, einen Secrets-Tresor, einen KI-Agenten, Dashboards, die Mandantenverwaltung und die Stammdatenschicht, aus der die übrigen ihre Referenzdaten lesen. Mein Beitrag ist die Konnektorschicht innerhalb dieses Stammdatenmoduls — das, was die Plattform die Datenbanken und OData-Dienste des Kunden lesen lässt, samt der Wächter, die festlegen, was eine Abfrage darf.',
+      highlights: [
+        'Aufbau der OData- und SQL-Konnektor-Engines hinter einer gemeinsamen Datenbank-Engine-Abstraktion, für SQL Server, PostgreSQL, MySQL und Oracle.',
+        'Wächter für Verbindungszeichenfolgen sowie SQL- und OData-Abfragen, damit ein Konnektor nicht auf Ziele gerichtet werden kann, die er nicht erreichen soll.',
+        'Fehlerklassifizierung, die aus einer toten Verbindung eine konkrete, handhabbare Ursache macht statt einer generischen Meldung — auch bei Hosts mit mehreren Adressen.',
+        'Schema-Import aus OData-$metadata: den Dienst sondieren, das EDM-Modell lesen, die Rollen im Schema bestimmen und eine importierbare Collection zusammenstellen.',
+        'Vue-3-Oberflächen für das Konnektor-Formular, den Abfrage-Import-Dialog und die Verwendungs-Panels, mit serverseitiger Paginierung und Massenaktionen.',
+        'Integrationsläufe gegen echte SQL-Server-, PostgreSQL-, MySQL- und Oracle-Instanzen in Docker, dazu Unit-Tests und en/fr-Übersetzungen.',
+      ],
+    },
     migration: {
       title: 'Migrationswerkzeuge für Altformulare',
       kind: 'Interne Werkzeuge',
@@ -277,6 +291,7 @@ export default {
     airline: 'Datensätze, die durch ETL in ein Star-Schema fließen und ein Dashboard speisen',
     jibly: 'Ein Fahrer, live auf der Route vom Restaurant zum Gast verfolgt',
     neolibrary: 'Ein Raster gemeinsamer Komponenten, das nacheinander aufleuchtet',
+    connectors: 'Abfragen aus vier Datenbank-Engines und einem OData-Dienst, die einen Wächter in Richtung Plattform passieren',
     migration: 'Alte XML- und CSV-Definitionen, Zeile für Zeile in eine Tabelle überführt',
     pdf: 'Seiten, die beim Scrollen fortschreitend dargestellt werden',
   },
