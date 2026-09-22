@@ -22,7 +22,7 @@ export const identity = {
 
   // Framed portrait beside the hero text; null removes the frame. Paths are
   // resolved through src/asset.js against the site's base URL.
-  portrait: '/portrait.png',
+  portrait: '/portrait.jpg',
 
   // Put a PDF in /public and point here to turn the top-bar button into a
   // download. It carried a phone number, which is why it is not published.

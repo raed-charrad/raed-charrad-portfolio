@@ -6,10 +6,14 @@ const prefersReducedMotion = () =>
 
 /**
  * Adds `.is-visible` the first time an element scrolls into view, which lets
- * CSS stagger its children in. Only used below the fold — the hero renders at
+ * CSS fade its children in. Only used below the fold — the hero renders at
  * full opacity so the first painted frame is never blank.
+ *
+ * Fires as soon as the element's top edge crosses into view, regardless of how
+ * tall the element is. See the threshold note below: getting that wrong hides
+ * an entire section on short screens.
  */
-export function useReveal({ threshold = 0.12 } = {}) {
+export function useReveal({ rootMargin = '0px 0px -10% 0px' } = {}) {
   const ref = useRef(null)
 
   useEffect(() => {
@@ -21,6 +25,13 @@ export function useReveal({ threshold = 0.12 } = {}) {
       return
     }
 
+    // threshold MUST stay 0. It is a fraction of the OBSERVED element, so an
+    // element taller than the viewport can never reach a non-zero value: the
+    // Work section wraps ~5400px of panels on a phone, whose ratio caps at
+    // viewportHeight / 5400 — about 0.10 on a 640px screen. With a 0.12
+    // threshold the observer never fired there and the whole section stayed at
+    // opacity 0. The bottom rootMargin is what delays the reveal instead, and
+    // it does not depend on the element's height.
     const io = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -29,12 +40,12 @@ export function useReveal({ threshold = 0.12 } = {}) {
           io.unobserve(entry.target)
         })
       },
-      { threshold, rootMargin: '0px 0px -6% 0px' }
+      { threshold: 0, rootMargin }
     )
 
     io.observe(el)
     return () => io.disconnect()
-  }, [threshold])
+  }, [rootMargin])
 
   return ref
 }
