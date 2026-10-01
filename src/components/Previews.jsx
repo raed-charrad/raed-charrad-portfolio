@@ -430,6 +430,61 @@ function Connectors() {
   )
 }
 
+/* ---------------------------------------------------------------------------
+   NeoFoot — fourteen players land as two seven-a-side teams, keepers marked,
+   and the balance beam under the pitch settles level.
+   ------------------------------------------------------------------------ */
+function Pitch() {
+  // One 7-a-side shape, mirrored about the halfway line at x = 160.
+  // The first entry is the goalkeeper on each side.
+  const left = [
+    [80, 55],
+    [102, 34],
+    [102, 76],
+    [124, 26],
+    [124, 55],
+    [124, 84],
+    [144, 55],
+  ]
+  const right = left.map(([x, y]) => [320 - x, y])
+
+  const team = (spots, side) =>
+    spots.map(([x, y], i) => (
+      <circle
+        key={side + i}
+        className={i === 0 ? 'pv-keeper' : 'pv-player'}
+        cx={x}
+        cy={y}
+        r={i === 0 ? 4.5 : 3.6}
+        style={{ animationDelay: `${(side === 'r' ? 0.18 : 0) + i * 0.13}s` }}
+      />
+    ))
+
+  return (
+    <Frame id="pitch">
+      <text className="pv-txt pv-txt--dim" x="160" y="10" textAnchor="middle">
+        7 v 7
+      </text>
+
+      {/* pitch */}
+      <rect className="pv-pitch" x="66" y="16" width="188" height="78" rx="4" />
+      <line className="pv-line" x1="160" y1="16" x2="160" y2="94" />
+      <circle className="pv-line pv-circle" cx="160" cy="55" r="13" />
+      <rect className="pv-line pv-circle" x="66" y="40" width="10" height="30" />
+      <rect className="pv-line pv-circle" x="244" y="40" width="10" height="30" />
+
+      {team(left, 'l')}
+      {team(right, 'r')}
+
+      {/* balance beam: tips, then settles level */}
+      <g className="pv-beam">
+        <rect x="112" y="103" width="96" height="3" rx="1.5" />
+      </g>
+      <path className="pv-fulcrum" d="M160 107 l5 7 h-10 z" />
+    </Frame>
+  )
+}
+
 const PREVIEWS = {
   fast: Fast,
   neoform: NeoForm,
@@ -440,6 +495,7 @@ const PREVIEWS = {
   migration: Migration,
   pdf: PdfViewer,
   connectors: Connectors,
+  pitch: Pitch,
 }
 
 /** Renders the preview named by a project's `preview` key, or nothing. */

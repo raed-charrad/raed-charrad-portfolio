@@ -94,6 +94,18 @@ export default {
       blurb:
         'Extension de l’intégration FAST : circuits de signature électronique, tâches de retour et fiches de suivi, tout juste migrés vers .NET 10.',
     },
+    neofoot: {
+      title: 'NeoFoot',
+      state: 'Utilisé chaque semaine',
+      blurb:
+        'L’app du foot du vendredi : tirage d’équipes équilibrées, notation anonyme, liste d’attente, notifications push et interface tounsi/français.',
+    },
+    elisestudio: {
+      title: 'Elise Studio',
+      state: 'Durcissement',
+      blurb:
+        'Au-delà des connecteurs : clôturer un audit de sécurité, sortir les consoles d’administration du bord public, et rendre la pile déployable sur une VM Docker en TLS.',
+    },
     neoform: {
       title: 'NeoForm Studio',
       state: 'En livraison',
@@ -176,6 +188,20 @@ export default {
         'Migration complète de la solution de .NET 8 vers .NET 10, et couverture de la couche providers avec NUnit et Moq.',
       ],
     },
+    neofoot: {
+      title: 'NeoFoot',
+      kind: 'Full stack · Conçu de bout en bout',
+      description:
+        'Une application web interne pour le match de foot du vendredi au travail : l’organisateur publie le match, les collègues s’inscrivent, et dès quatorze joueurs elle tire deux équipes équilibrées et les dispose sur un terrain. Je l’ai construite seul — backend, frontend, déploiement — et elle sert toutes les semaines.',
+      highlights: [
+        'Tirage équilibré qui égalise la force de champ de chaque camp et apparie des gardiens comparables, en mêlant les notes des joueurs à la forme récente et en faisant tourner celui qui a gardé le but le moins récemment.',
+        'Notation anonyme entre pairs sur cinq qualités, les scores n’apparaissant qu’à partir de trois évaluateurs différents — une note isolée ne peut donc jamais être remontée à son auteur.',
+        'Liste d’attente qui promeut automatiquement en cas de désistement, avec une fenêtre de confirmation d’une heure pour les appels de dernière minute, jamais au-delà du coup d’envoi.',
+        'Bilingue de bout en bout — derja tunisienne et français — écrans, messages serveur et e-mails compris, les deux fichiers de messages étant typés sur un même contrat : le build échoue si une clé manque.',
+        'Installable en PWA avec notifications push, et comptes invités accessibles par liens d’invitation à usage unique, stockés uniquement sous forme d’empreinte SHA-256.',
+        'ASP.NET Core 10 avec EF Core et SQL Server derrière une interface Vue 3 et Tailwind, empaquetée et déployée sur IIS via des scripts PowerShell.',
+      ],
+    },
     neoform: {
       title: 'NeoForm',
       kind: 'Plateforme SaaS multi-tenant',
@@ -242,6 +268,8 @@ export default {
         'Import de schéma depuis les métadonnées OData : sonder le service, lire le modèle EDM, déterminer les rôles du schéma et composer une collection importable.',
         'Écrans Vue 3 du formulaire de connecteur, du dialogue d’import de requête et des panneaux d’usage, avec pagination serveur et actions de masse.',
         'Bancs d’intégration exécutés contre de vraies instances SQL Server, PostgreSQL, MySQL et Oracle dans Docker, avec tests unitaires et traductions en/fr.',
+        'Depuis : clôture d’un audit de sécurité de dix-huit constats, corrections mesurées à l’appui, et sortie des deux consoles d’administration du bord public vers une VM séparée.',
+        'Rendu l’ensemble de la pile déployable sur une VM Docker en TLS.',
       ],
     },
     migration: {
@@ -283,6 +311,7 @@ export default {
 
   previews: {
     fast: 'Un document circulant de FAST vers Elise, avec un retry en cas d’échec et un circuit de signature qui se complète',
+    pitch: 'Quatorze joueurs répartis en deux équipes de sept équilibrées sur un terrain, la balance s’égalisant',
     neoform: 'Des champs de formulaire déposés sur un canevas de conception, déclenchant ensuite un workflow',
     ordering: 'Un téléphone parcourant une carte, remplissant un panier et confirmant le paiement',
     airline: 'Des lignes traversant un ETL vers un schéma en étoile, alimentant un tableau de bord',

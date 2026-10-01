@@ -94,6 +94,18 @@ export default {
       blurb:
         'Extending the FAST integration: e-signature circuits, return tasks and tracking sheets, freshly migrated to .NET 10.',
     },
+    neofoot: {
+      title: 'NeoFoot',
+      state: 'In weekly use',
+      blurb:
+        'The Friday football app: balanced team draws, anonymous ratings, a waitlist, push notifications and a Tounsi/French interface.',
+    },
+    elisestudio: {
+      title: 'Elise Studio',
+      state: 'Hardening',
+      blurb:
+        'Beyond the connectors: closing out a security audit, moving the admin consoles off the public edge, and making the stack deployable on a Docker VM over TLS.',
+    },
     neoform: {
       title: 'NeoForm Studio',
       state: 'Shipping',
@@ -176,6 +188,20 @@ export default {
         'Migrated the whole solution from .NET 8 to .NET 10, and covered the provider layer with NUnit and Moq.',
       ],
     },
+    neofoot: {
+      title: 'NeoFoot',
+      kind: 'Full stack · Built end to end',
+      description:
+        'An internal web app for the Friday football game at work: the organiser posts the match, colleagues sign up, and once fourteen players are in it draws two balanced teams and lays them out on a pitch. I built it on my own — backend, frontend, deployment — and it is in weekly use.',
+      highlights: [
+        'Balanced draw that evens out each side’s outfield strength and pairs comparable goalkeepers, mixing player ratings with recent form and rotating whoever kept goal least recently.',
+        'Anonymous peer ratings across five skills, with scores withheld until three different people have rated someone — so a single rating can never be traced back.',
+        'Waitlist that promotes automatically when somebody drops out, with a one-hour confirmation window for last-minute call-ups that never runs past kick-off.',
+        'Bilingual throughout — Tunisian derja and French — covering screens, server messages and emails, with the two message files typed against one contract so the build fails if a key is missing.',
+        'Installable as a PWA with web push, plus guest accounts reachable through single-use invitation links stored only as a SHA-256 hash.',
+        'ASP.NET Core 10 with EF Core and SQL Server behind a Vue 3 and Tailwind front end, packaged and deployed to IIS with PowerShell scripts.',
+      ],
+    },
     neoform: {
       title: 'NeoForm',
       kind: 'Multi-tenant SaaS platform',
@@ -242,6 +268,8 @@ export default {
         'Schema import from OData $metadata: probe the service, read the EDM model, work out the roles in the schema and compose an importable collection.',
         'Vue 3 screens for the connector form, the query-import dialog and the usage panels, with server-side pagination and bulk actions.',
         'Integration benches that run against real SQL Server, PostgreSQL, MySQL and Oracle instances in Docker, alongside unit tests and en/fr translations.',
+        'Since then: closed out an eighteen-finding security audit with the fixes measured, and moved the two administration consoles off the public edge onto a separate VM.',
+        'Made the whole stack deployable on a Docker VM over TLS.',
       ],
     },
     migration: {
@@ -283,6 +311,7 @@ export default {
 
   previews: {
     fast: 'A document travelling from FAST into Elise, with a retry on failure and a signing circuit completing',
+    pitch: 'Fourteen players drawn into two balanced seven-a-side teams on a pitch, with the balance evening out',
     neoform: 'Form fields dropping into a designer canvas, then triggering a workflow',
     ordering: 'A phone browsing a menu, filling a basket and confirming payment',
     airline: 'Rows flowing through ETL into a star schema, feeding a dashboard of bars',

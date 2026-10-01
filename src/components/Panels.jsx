@@ -169,28 +169,34 @@ function Panel({ project, index, wide }) {
 export function Work() {
   const { projects } = useContent()
 
-  // Half-width panels only pair up if they are adjacent. Authoring a half-width
-  // project between two full-width ones used to leave it alone beside a column
-  // of dead space, so layout is derived here rather than left to array order:
-  // full-width panels first, then half-width ones. The sort is stable, so the
-  // order written in core.js still holds within each tier.
-  const ordered = [...projects].sort(
-    (a, b) => Number(Boolean(b.featured)) - Number(Boolean(a.featured))
-  )
+  // Newest first. `date` is the month of the last activity on each project;
+  // the comparison is on a plain YYYY-MM string, so it sorts lexically.
+  const ordered = [...projects].sort((a, b) => String(b.date).localeCompare(String(a.date)))
 
-  // An odd number of half-width panels would still strand the last one, so it
-  // spans the full row instead of sitting beside a gap.
-  const strays = ordered.filter((p) => !p.featured).length % 2 === 1
+  // A half-width panel only works if the panel after it is also half-width —
+  // otherwise it sits alone beside an empty column. Walk the list in order and
+  // pair them up; anything that cannot pair is widened to fill its row. This
+  // keeps the date order exact while leaving no gap anywhere in the grid.
+  const wide = new Array(ordered.length)
+  for (let i = 0; i < ordered.length; i++) {
+    if (wide[i] !== undefined) continue
+    if (ordered[i].featured) {
+      wide[i] = true
+      continue
+    }
+    const next = ordered[i + 1]
+    if (next && !next.featured) {
+      wide[i] = false
+      wide[i + 1] = false
+    } else {
+      wide[i] = true
+    }
+  }
 
   return (
     <div className="work">
       {ordered.map((project, i) => (
-        <Panel
-          key={project.id}
-          project={project}
-          index={i}
-          wide={project.featured || (strays && i === ordered.length - 1)}
-        />
+        <Panel key={project.id} project={project} index={i} wide={wide[i]} />
       ))}
     </div>
   )

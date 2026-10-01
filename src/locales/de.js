@@ -97,6 +97,18 @@ export default {
       blurb:
         'Ausbau der FAST-Integration: Signaturläufe, Rückläufer-Aufgaben und Laufzettel, frisch auf .NET 10 migriert.',
     },
+    neofoot: {
+      title: 'NeoFoot',
+      state: 'Wöchentlich im Einsatz',
+      blurb:
+        'Die App für den Freitagsfußball: ausgeglichene Auslosung, anonyme Bewertungen, Warteliste, Push-Benachrichtigungen und eine Oberfläche auf Tounsi und Französisch.',
+    },
+    elisestudio: {
+      title: 'Elise Studio',
+      state: 'Härtung',
+      blurb:
+        'Über die Konnektoren hinaus: ein Sicherheitsaudit abschließen, die Admin-Konsolen vom öffentlichen Rand lösen und den Stack auf einer Docker-VM über TLS ausliefern.',
+    },
     neoform: {
       title: 'NeoForm Studio',
       state: 'In Auslieferung',
@@ -179,6 +191,20 @@ export default {
         'Migration der gesamten Lösung von .NET 8 auf .NET 10 und Testabdeckung der Provider-Schicht mit NUnit und Moq.',
       ],
     },
+    neofoot: {
+      title: 'NeoFoot',
+      kind: 'Full Stack · Komplett selbst gebaut',
+      description:
+        'Eine interne Web-App für das Freitagsfußballspiel in der Firma: Der Organisator schreibt das Spiel aus, Kolleginnen und Kollegen tragen sich ein, und sobald vierzehn Leute zusammen sind, lost sie zwei ausgeglichene Mannschaften aus und stellt sie auf einem Spielfeld auf. Ich habe sie allein gebaut — Backend, Frontend, Deployment — und sie ist wöchentlich im Einsatz.',
+      highlights: [
+        'Ausgeglichene Auslosung, die die Feldstärke beider Seiten angleicht und vergleichbare Torleute paart; sie mischt Spielerbewertungen mit der aktuellen Form und rotiert, wer zuletzt am längsten nicht im Tor stand.',
+        'Anonyme Bewertungen in fünf Fähigkeiten, deren Werte erst sichtbar werden, wenn drei verschiedene Personen bewertet haben — eine einzelne Bewertung lässt sich so nie zurückverfolgen.',
+        'Warteliste, die bei Absagen automatisch nachrückt, mit einem Bestätigungsfenster von einer Stunde für kurzfristige Nachrücker, nie über den Anpfiff hinaus.',
+        'Durchgehend zweisprachig — tunesisches Derja und Französisch — über Oberflächen, Servermeldungen und E-Mails hinweg; beide Textdateien sind gegen denselben Vertrag typisiert, der Build scheitert bei einem fehlenden Schlüssel.',
+        'Als PWA installierbar, mit Web Push, dazu Gastkonten über einmalig nutzbare Einladungslinks, von denen nur ein SHA-256-Hash gespeichert wird.',
+        'ASP.NET Core 10 mit EF Core und SQL Server hinter einem Frontend aus Vue 3 und Tailwind, per PowerShell-Skripten paketiert und auf IIS ausgeliefert.',
+      ],
+    },
     neoform: {
       title: 'NeoForm',
       kind: 'Mandantenfähige SaaS-Plattform',
@@ -245,6 +271,8 @@ export default {
         'Schema-Import aus OData-$metadata: den Dienst sondieren, das EDM-Modell lesen, die Rollen im Schema bestimmen und eine importierbare Collection zusammenstellen.',
         'Vue-3-Oberflächen für das Konnektor-Formular, den Abfrage-Import-Dialog und die Verwendungs-Panels, mit serverseitiger Paginierung und Massenaktionen.',
         'Integrationsläufe gegen echte SQL-Server-, PostgreSQL-, MySQL- und Oracle-Instanzen in Docker, dazu Unit-Tests und en/fr-Übersetzungen.',
+        'Seitdem: ein Sicherheitsaudit mit achtzehn Befunden abgeschlossen und die Korrekturen nachgemessen, dazu die beiden Administrationskonsolen vom öffentlichen Rand auf eine eigene VM verlegt.',
+        'Den gesamten Stack auf einer Docker-VM über TLS auslieferbar gemacht.',
       ],
     },
     migration: {
@@ -286,6 +314,7 @@ export default {
 
   previews: {
     fast: 'Ein Dokument auf dem Weg von FAST nach Elise, mit Wiederholung bei Fehlern und einem sich vervollständigenden Signaturlauf',
+    pitch: 'Vierzehn Spieler, auf zwei ausgeglichene Siebener-Mannschaften verteilt, mit sich einpendelnder Waage',
     neoform: 'Formularfelder, die auf eine Designfläche fallen und anschließend einen Workflow auslösen',
     ordering: 'Ein Telefon, das eine Karte durchblättert, einen Warenkorb füllt und die Zahlung bestätigt',
     airline: 'Datensätze, die durch ETL in ein Star-Schema fließen und ein Dashboard speisen',

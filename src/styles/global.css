@@ -1948,3 +1948,46 @@ ul {
   0%, 25%, 55%, 100% { stroke: var(--live); }
   38% { stroke: var(--flow); }
 }
+
+/* --- NeoFoot pitch preview ---------------------------------------------- */
+.pv-pitch {
+  fill: rgba(22, 32, 45, 0.5);
+  stroke: var(--line-bright);
+  stroke-width: 1;
+}
+.pv-circle {
+  fill: none;
+}
+/* Players arrive as the draw places them; they rest visible. */
+.pv-player {
+  fill: var(--flow);
+  animation: pv-place 4s var(--ease) infinite;
+}
+/* The keeper is a role, not data, so it gets the status colour. */
+.pv-keeper {
+  fill: var(--panel);
+  stroke: var(--live);
+  stroke-width: 1.6;
+  animation: pv-place 4s var(--ease) infinite;
+}
+@keyframes pv-place {
+  0% { opacity: 0; transform: translateY(-5px); }
+  18%, 88% { opacity: 1; transform: none; }
+  100% { opacity: 0; transform: none; }
+}
+/* The beam tips one way, then the other, then settles — the balanced draw. */
+.pv-beam rect {
+  fill: var(--line-bright);
+}
+.pv-beam {
+  transform-origin: 160px 104.5px;
+  animation: pv-balance 4s var(--ease) infinite;
+}
+@keyframes pv-balance {
+  0%, 20% { transform: rotate(-7deg); }
+  45% { transform: rotate(4deg); }
+  70%, 100% { transform: rotate(0deg); }
+}
+.pv-fulcrum {
+  fill: var(--line-bright);
+}

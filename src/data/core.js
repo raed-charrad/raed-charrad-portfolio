@@ -54,7 +54,7 @@ export const metrics = [
   { id: 'products', value: 4, suffix: '' },
 ]
 
-export const now = [{ id: 'fast' }, { id: 'neoform' }, { id: 'ultimateit' }, { id: 'migration' }]
+export const now = [{ id: 'neofoot' }, { id: 'elisestudio' }, { id: 'neoform' }, { id: 'ultimateit' }]
 
 export const experience = [
   {
@@ -88,9 +88,16 @@ export const experience = [
   },
 ]
 
+/*
+   ORDERING: the Work grid is sorted by `date`, most recent first. It is the
+   month of your last activity on the project. Where a repository exists on
+   this machine the date is your own last commit there; the four marked CHECK
+   are estimates, and they decide where those panels land, so correct them.
+   --------------------------------------------------------------------- */
 export const projects = [
   {
     id: 'fast',
+    date: '2026-09-21', // your last commit here
     year: '2025 — 2026',
     featured: true,
     preview: 'fast',
@@ -108,7 +115,32 @@ export const projects = [
     href: null,
   },
   {
+    // 8 of 9 commits are yours — this one is genuinely yours end to end,
+    // unlike the NeoLedge platform work where you are one contributor.
+    id: 'neofoot',
+    date: '2026-10-01', // your last commit here
+    year: '2026',
+    featured: true,
+    preview: 'pitch',
+    tech: [
+      '.NET 10',
+      'ASP.NET Core',
+      'EF Core',
+      'SQL Server',
+      'ASP.NET Identity',
+      'Vue 3',
+      'TypeScript',
+      'Tailwind',
+      'PWA',
+      'Web Push',
+      'MailKit',
+      'IIS',
+    ],
+    href: null,
+  },
+  {
     id: 'neoform',
+    date: '2026-09-30', // your last commit here
     year: '2023 — 2026',
     featured: true,
     preview: 'neoform',
@@ -117,6 +149,7 @@ export const projects = [
   },
   {
     id: 'ordering',
+    date: '2026-08', // CHECK estimate - no repo here
     year: '2025 — 2026', // CHECK confirm the range
     featured: true,
     preview: 'ordering',
@@ -132,6 +165,7 @@ export const projects = [
   },
   {
     id: 'airline',
+    date: '2026-07', // CHECK estimate - no repo here
     year: '2026', // CHECK confirm this year
     featured: true,
     preview: 'airline',
@@ -151,6 +185,7 @@ export const projects = [
   },
   {
     id: 'jibly',
+    date: '2026-08', // CHECK estimate - no repo here
     year: '2025 — 2026',
     featured: false,
     preview: 'jibly',
@@ -162,6 +197,7 @@ export const projects = [
     // primary author, so every locale words this as a contribution. Change it
     // only if you owned more of it than the commits show.
     id: 'neolibrary',
+    date: '2026-06-02', // your last commit here
     year: '2025 — 2026',
     featured: false,
     preview: 'neolibrary',
@@ -170,6 +206,7 @@ export const projects = [
   },
   {
     id: 'migration',
+    date: '2026-09-03', // generate_dataexport.py last changed
     year: '2026',
     featured: false,
     preview: 'migration',
@@ -178,6 +215,7 @@ export const projects = [
   },
   {
     id: 'pdfviewer',
+    date: '2023-05', // end of the PFE internship
     year: '2023',
     featured: false,
     preview: 'pdf',
@@ -190,6 +228,7 @@ export const projects = [
     // you actually did rather than to the platform as a whole. Adjust only if
     // you owned more of it than the commits show.
     id: 'elisestudio',
+    date: '2026-09-28', // your last commit here
     year: '2026',
     featured: false,
     preview: 'connectors',
@@ -202,6 +241,8 @@ export const projects = [
       'Oracle',
       'Vue 3',
       'TypeScript',
+      'Docker',
+      'TLS',
       'Playwright',
     ],
     href: null,
